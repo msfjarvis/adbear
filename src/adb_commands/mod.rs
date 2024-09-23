@@ -2,7 +2,7 @@ use anyhow::anyhow;
 use std::{
     io,
     net::Ipv4Addr,
-    process::{Command, ExitStatus, Stdio},
+    process::{Command, ExitStatus, Output, Stdio},
 };
 
 pub fn pair(ip: Ipv4Addr, port: u16, password: &str) -> io::Result<ExitStatus> {
@@ -15,13 +15,13 @@ pub fn pair(ip: Ipv4Addr, port: u16, password: &str) -> io::Result<ExitStatus> {
         .status()
 }
 
-pub fn connect(ip: Ipv4Addr, port: u16) -> io::Result<ExitStatus> {
+pub fn connect(ip: Ipv4Addr, port: u16) -> io::Result<Output> {
     Command::new("adb")
         .arg("connect")
         .arg(format!("{ip}:{port}"))
-        .stdout(Stdio::null())
+        .stdout(Stdio::piped())
         .stderr(Stdio::null())
-        .status()
+        .output()
 }
 
 pub fn get_device_name(ip: Ipv4Addr, port: u16) -> anyhow::Result<String> {
