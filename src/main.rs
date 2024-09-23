@@ -1,3 +1,4 @@
+mod adb_commands;
 mod password;
 mod scanning;
 
@@ -12,9 +13,30 @@ async fn main() {
         .build()
         .expect("Failed to print QR code")
         .print();
-    if let Ok(info) = scanning::search_for_device(identifier).await {
-        for addr in info.get_addresses_v4() {
-            println!("Found device at: {addr}");
+    if let Ok(info) = scanning::find_pairing_service(&identifier).await {
+        let port = info.get_port();
+        let ip = info
+            .get_addresses_v4()
+            .iter()
+            .next()
+            .copied()
+            .unwrap()
+            .to_owned();
+        crate::adb_commands::pair(ip, port, &password).expect("Failed to pair");
+    }
+
+    if let Ok(info) = scanning::find_connection_service().await {
+        let port = info.get_port();
+        let ip = info
+            .get_addresses_v4()
+            .iter()
+            .next()
+            .copied()
+            .unwrap()
+            .to_owned();
+        crate::adb_commands::connect(ip, port).expect("Failed to connect");
+        if let Ok(device_name) = crate::adb_commands::get_device_name(ip, port) {
+            println!("Connected to {device_name}");
         }
     }
 }
