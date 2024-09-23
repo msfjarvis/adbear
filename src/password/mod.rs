@@ -8,7 +8,7 @@ const ALL_CHARACTERS: [&str; 90] = [
     "{", "|", "}", "~", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
 ];
 
-pub fn generate_password() -> String {
+pub fn generate() -> String {
     let mut rng = rand::thread_rng();
     (0..20)
         .map(|_| {

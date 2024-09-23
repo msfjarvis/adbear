@@ -3,13 +3,18 @@ mod scanning;
 
 use std::env;
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+#[tokio::main]
+async fn main() {
     let hostname = env::var("HOSTNAME").unwrap_or("localhost".to_string());
-    let password = crate::password::generate_password();
-    fast_qr::QRBuilder::new(format!("WIFI:T:ADB;S:ADBear@{hostname};P:{password};;"))
+    let identifier = format!("ADBear@{hostname}");
+    let password = crate::password::generate();
+    fast_qr::QRBuilder::new(format!("WIFI:T:ADB;S:{identifier};P:{password};;"))
         .build()
         .expect("Failed to print QR code")
         .print();
-    crate::scanning::search_for_devices();
-    Ok(())
+    if let Ok(info) = scanning::search_for_device(identifier).await {
+        for addr in info.get_addresses_v4() {
+            println!("Found device at: {addr}");
+        }
+    }
 }
