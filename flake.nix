@@ -1,5 +1,5 @@
 {
-  description = "package definition and devshell for my-rust-package";
+  description = "package definition and devshell for adbear";
 
   inputs.nixpkgs.url = "github:msfjarvis/nixpkgs/nixpkgs-unstable";
 
@@ -56,11 +56,11 @@
         };
         cargoArtifacts = craneLib.buildDepsOnly (commonArgs // { doCheck = false; });
 
-        my-rust-package = craneLib.buildPackage (commonArgs // { doCheck = false; });
-        my-rust-package-clippy = craneLib.cargoClippy (commonArgs // { inherit cargoArtifacts; });
-        my-rust-package-fmt = craneLib.cargoFmt (commonArgs // { });
-        my-rust-package-audit = craneLib.cargoAudit (commonArgs // { inherit advisory-db; });
-        my-rust-package-nextest = craneLib.cargoNextest (
+        adbear = craneLib.buildPackage (commonArgs // { doCheck = false; });
+        adbear-clippy = craneLib.cargoClippy (commonArgs // { inherit cargoArtifacts; });
+        adbear-fmt = craneLib.cargoFmt (commonArgs // { });
+        adbear-audit = craneLib.cargoAudit (commonArgs // { inherit advisory-db; });
+        adbear-nextest = craneLib.cargoNextest (
           commonArgs
           // {
             inherit cargoArtifacts;
@@ -73,17 +73,17 @@
       {
         checks = {
           inherit
-            my-rust-package
-            my-rust-package-audit
-            my-rust-package-clippy
-            my-rust-package-fmt
-            my-rust-package-nextest
+            adbear
+            adbear-audit
+            adbear-clippy
+            adbear-fmt
+            adbear-nextest
             ;
         };
 
-        packages.default = my-rust-package;
+        packages.default = adbear;
 
-        apps.default = flake-utils.lib.mkApp { drv = my-rust-package; };
+        apps.default = flake-utils.lib.mkApp { drv = adbear; };
 
         devShells.default = pkgs.devshell.mkShell {
           bash = {
