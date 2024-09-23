@@ -5,4 +5,5 @@ edition = "2021"
 
 [dependencies]
 fast_qr = "0.12.5"
+mdns-sd = { version = "0.11.4", default-features = false }
 rand = "0.8.5"

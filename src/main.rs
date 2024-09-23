@@ -1,4 +1,5 @@
 mod password;
+mod scanning;
 
 use std::env;
 
@@ -9,5 +10,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .build()
         .expect("Failed to print QR code")
         .print();
+    crate::scanning::search_for_devices();
     Ok(())
 }
