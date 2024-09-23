@@ -1,5 +1,6 @@
 use anyhow::anyhow;
 use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo};
+use std::time::Duration;
 use tokio::time::timeout;
 
 const MDNS_SCAN_TYPE: &str = "_adb-tls-connect._tcp.local.";
@@ -26,7 +27,7 @@ pub async fn find_pairing_service(identifier: &str) -> anyhow::Result<ServiceInf
     let mdns = ServiceDaemon::new().expect("Failed to create daemon");
 
     match timeout(
-        std::time::Duration::from_secs(30),
+        Duration::from_secs(30),
         inner(&mdns, MDNS_PAIRING_TYPE, identifier),
     )
     .await
@@ -62,12 +63,7 @@ pub async fn find_connection_service() -> anyhow::Result<ServiceInfo> {
 
     let mdns = ServiceDaemon::new().expect("Failed to create daemon");
 
-    match timeout(
-        std::time::Duration::from_secs(30),
-        inner(&mdns, MDNS_SCAN_TYPE),
-    )
-    .await
-    {
+    match timeout(Duration::from_secs(30), inner(&mdns, MDNS_SCAN_TYPE)).await {
         Ok(Some(info)) => {
             mdns.shutdown().unwrap();
             Ok(info)
