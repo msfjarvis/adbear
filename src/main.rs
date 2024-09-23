@@ -7,26 +7,6 @@ use std::env;
 
 #[tokio::main]
 async fn main() {
-    if let Ok(info) = scanning::find_connection_service().await {
-        let port = info.get_port();
-        let ip = info
-            .get_addresses_v4()
-            .iter()
-            .next()
-            .copied()
-            .unwrap()
-            .to_owned();
-        if let Ok(output) = crate::adb_commands::connect(ip, port)
-            && let stdout = String::from_utf8_lossy(&output.stdout)
-            && !stdout.contains("Connection refused")
-        {
-            if let Ok(device_name) = crate::adb_commands::get_device_name(ip, port) {
-                println!("Connected to {device_name}");
-            }
-            return;
-        }
-    }
-
     let hostname = env::var("HOSTNAME").unwrap_or("localhost".to_string());
     let identifier = format!("ADBear@{hostname}");
     let password = crate::password::generate();
