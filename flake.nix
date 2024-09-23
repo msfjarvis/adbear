@@ -40,6 +40,8 @@
           overlays = [ devshell.overlays.default ];
         };
 
+        inherit (pkgs) lib stdenv;
+
         rustStable = (import fenix { inherit pkgs; }).fromToolchainFile {
           file = ./rust-toolchain.toml;
           sha256 = "sha256-VZZnlyP69+Y3crrLHQyJirqlHrTtGTsyiSnZB8jEvVo=";
@@ -48,8 +50,8 @@
         craneLib = (crane.mkLib pkgs).overrideToolchain rustStable;
         commonArgs = {
           src = craneLib.cleanCargoSource ./.;
-          buildInputs = [ ];
-          nativeBuildInputs = [ ];
+          buildInputs = [ pkgs.openssl ];
+          nativeBuildInputs = [ pkgs.pkg-config ] ++ lib.optionals stdenv.isDarwin [ pkgs.libiconv ];
           cargoClippyExtraArgs = "--all-targets -- --deny warnings";
         };
         cargoArtifacts = craneLib.buildDepsOnly (commonArgs // { doCheck = false; });
