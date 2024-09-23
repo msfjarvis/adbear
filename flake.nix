@@ -98,6 +98,7 @@
           ];
 
           packages = with pkgs; [
+            cargo-dist
             cargo-nextest
             cargo-release
             rustStable
