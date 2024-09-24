@@ -6,6 +6,7 @@ authors = ["Harsh Shandilya <me@msfjarvis.dev>"]
 repository = "https://github.com/msfjarvis/adbear"
 description = "CLI to enable ADB pairing over WiFi"
 homepage = "https://msfjarvis.github.io/adbear"
+license = "MIT OR Apache-2.0"
 
 [package.metadata.wix]
 upgrade-guid = "4E187D2A-9BA1-43B8-9B51-A6D94C057E96"
