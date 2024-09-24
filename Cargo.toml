@@ -1,6 +1,6 @@
 [package]
 name = "adbear"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Harsh Shandilya <me@msfjarvis.dev>"]
 repository = "https://github.com/msfjarvis/adbear"
