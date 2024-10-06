@@ -90,9 +90,9 @@ checksum = "22ec99545bb0ed0ea7bb9b8e1e9122ea386ff8a48c0922e43f36d45ab09e0e80"
 
 [[package]]
 name = "fast_qr"
-version = "0.12.5"
+version = "0.12.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a4415f4c642f04fea6ada6ff450018f3c28c1e7248528584718220c449d7f5f4"
+checksum = "4caec93f3f5074bb9c1cc2abe722ad81b7734fc69c5bb362766a881901d49d88"
 
 [[package]]
 name = "flume"
