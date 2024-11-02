@@ -98,6 +98,7 @@
           ];
 
           packages = with pkgs; [
+            bacon
             cargo-dist
             cargo-nextest
             cargo-release
