@@ -6,14 +6,11 @@ use tokio::time::timeout;
 const MDNS_SCAN_TYPE: &str = "_adb-tls-connect._tcp.local.";
 const MDNS_PAIRING_TYPE: &str = "_adb-tls-pairing._tcp.local.";
 
-async fn find_mdns_service<MatchFn>(
+async fn find_mdns_service(
     mdns: &ServiceDaemon,
     service_type: &str,
-    is_match: MatchFn,
-) -> Option<ServiceInfo>
-where
-    MatchFn: Fn(&ServiceInfo) -> bool,
-{
+    is_match: impl Fn(&ServiceInfo) -> bool,
+) -> Option<ServiceInfo> {
     let receiver = mdns.browse(service_type).expect("Failed to browse");
 
     while let Ok(event) = receiver.recv_async().await {
