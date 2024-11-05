@@ -36,12 +36,16 @@ async fn main() {
             .unwrap()
             .to_owned();
         if let Ok(output) = crate::adb_commands::connect(ip, port)
-            && let stdout = String::from_utf8_lossy(&output.stdout)
-            && !stdout.contains("Connection refused")
+            && output.status.success()
         {
-            if let Ok(device_name) = crate::adb_commands::get_device_name(ip, port) {
-                println!("Connected to {device_name}");
+            if let Ok(output) = crate::adb_commands::get_device_name(ip, port) {
+                println!(
+                    "Connected to {device_name}",
+                    device_name = String::from_utf8_lossy(&output.stdout)
+                );
             }
+        } else {
+            println!("Failed to connect");
         }
     }
 }
