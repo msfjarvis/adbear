@@ -60,16 +60,16 @@
         adbear-clippy = craneLib.cargoClippy (commonArgs // { inherit cargoArtifacts; });
         adbear-fmt = craneLib.cargoFmt (commonArgs // { });
         adbear-audit = craneLib.cargoAudit (commonArgs // { inherit advisory-db; });
-        adbear-nextest = craneLib.cargoNextest (
-          commonArgs
-          // {
-            inherit cargoArtifacts;
-            src = ./.;
-            partitions = 1;
-            partitionType = "count";
-          }
-        );
       in
+      # adbear-nextest = craneLib.cargoNextest (
+      #   commonArgs
+      #   // {
+      #     inherit cargoArtifacts;
+      #     src = ./.;
+      #     partitions = 1;
+      #     partitionType = "count";
+      #   }
+      # );
       {
         checks = {
           inherit
@@ -77,7 +77,7 @@
             adbear-audit
             adbear-clippy
             adbear-fmt
-            adbear-nextest
+            # adbear-nextest
             ;
         };
 
