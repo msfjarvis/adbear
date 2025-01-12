@@ -9,7 +9,7 @@ use std::env;
 async fn main() {
     let hostname = env::var("HOSTNAME").unwrap_or("localhost".to_string());
     let identifier = format!("ADBear@{hostname}");
-    let password = crate::password::generate();
+    let password = password::generate();
     fast_qr::QRBuilder::new(format!("WIFI:T:ADB;S:{identifier};P:{password};;"))
         .build()
         .expect("Failed to print QR code")
@@ -23,7 +23,7 @@ async fn main() {
             .copied()
             .unwrap()
             .to_owned();
-        crate::adb_commands::pair(ip, port, &password).expect("Failed to pair");
+        adb_commands::pair(ip, port, &password).expect("Failed to pair");
     }
 
     if let Ok(info) = scanning::find_connection_service().await {
@@ -35,10 +35,10 @@ async fn main() {
             .copied()
             .unwrap()
             .to_owned();
-        if let Ok(output) = crate::adb_commands::connect(ip, port)
+        if let Ok(output) = adb_commands::connect(ip, port)
             && output.status.success()
         {
-            if let Ok(output) = crate::adb_commands::get_device_name(ip, port) {
+            if let Ok(output) = adb_commands::get_device_name(ip, port) {
                 println!(
                     "Connected to {device_name}",
                     device_name = String::from_utf8_lossy(&output.stdout)
