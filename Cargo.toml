@@ -18,7 +18,7 @@ eula = false
 anyhow = "1.0.89"
 fast_qr = "0.12.5"
 mdns-sd = { version = "0.13.0", default-features = false, features = ["async"] }
-rand = "0.8.5"
+rand = "0.9.0"
 tokio = { version = "1.40.0", features = ["macros", "rt-multi-thread", "time"] }
 
 # The profile that 'cargo dist' will build with

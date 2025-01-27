@@ -9,10 +9,10 @@ const ALL_CHARACTERS: [&str; 90] = [
 ];
 
 pub fn generate() -> String {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     (0..20)
         .map(|_| {
-            let idx = rng.gen_range(0..ALL_CHARACTERS.len());
+            let idx = rng.random_range(0..ALL_CHARACTERS.len());
             ALL_CHARACTERS[idx]
         })
         .collect()
