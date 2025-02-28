@@ -1,4 +1,3 @@
-#![feature(let_chains)]
 mod adb_commands;
 mod password;
 mod scanning;
@@ -35,9 +34,11 @@ async fn main() {
             .copied()
             .unwrap()
             .to_owned();
-        if let Ok(output) = adb_commands::connect(ip, port)
-            && output.status.success()
-        {
+        let Ok(output) = adb_commands::connect(ip, port) else {
+            println!("Failed to connect");
+            return;
+        };
+        if output.status.success() {
             if let Ok(output) = adb_commands::get_device_name(ip, port) {
                 println!(
                     "Connected to {device_name}",
