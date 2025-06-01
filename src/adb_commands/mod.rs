@@ -4,17 +4,17 @@ use std::{
     process::{Command, Output, Stdio},
 };
 
-pub fn pair(ip: Ipv4Addr, port: u16, password: &str) -> io::Result<Output> {
+pub fn pair(ip: &Ipv4Addr, port: u16, password: &str) -> io::Result<Output> {
     Command::new("adb")
         .arg("pair")
         .arg(format!("{ip}:{port}"))
         .arg(password)
-        .stdout(Stdio::null())
-        .stderr(Stdio::null())
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
         .output()
 }
 
-pub fn connect(ip: Ipv4Addr, port: u16) -> io::Result<Output> {
+pub fn connect(ip: &Ipv4Addr, port: u16) -> io::Result<Output> {
     Command::new("adb")
         .arg("connect")
         .arg(format!("{ip}:{port}"))
@@ -23,7 +23,7 @@ pub fn connect(ip: Ipv4Addr, port: u16) -> io::Result<Output> {
         .output()
 }
 
-pub fn get_device_name(ip: Ipv4Addr, port: u16) -> io::Result<Output> {
+pub fn get_device_name(ip: &Ipv4Addr, port: u16) -> io::Result<Output> {
     Command::new("adb")
         .arg("-s")
         .arg(format!("{ip}:{port}"))
