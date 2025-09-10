@@ -1,5 +1,5 @@
 use anyhow::anyhow;
-use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo};
+use mdns_sd::{ResolvedService, ServiceDaemon, ServiceEvent};
 use std::time::Duration;
 use tokio::time::timeout;
 
@@ -9,8 +9,8 @@ const MDNS_PAIRING_TYPE: &str = "_adb-tls-pairing._tcp.local.";
 async fn find_mdns_service(
     mdns: &ServiceDaemon,
     service_type: &str,
-    is_match: impl Fn(&ServiceInfo) -> bool,
-) -> Option<ServiceInfo> {
+    is_match: impl Fn(&Box<ResolvedService>) -> bool,
+) -> Option<Box<ResolvedService>> {
     let receiver = mdns.browse(service_type).expect("Failed to browse");
 
     while let Ok(event) = receiver.recv_async().await {
@@ -23,7 +23,7 @@ async fn find_mdns_service(
     None
 }
 
-pub async fn find_pairing_service(identifier: &str) -> anyhow::Result<ServiceInfo> {
+pub async fn find_pairing_service(identifier: &str) -> anyhow::Result<Box<ResolvedService>> {
     let mdns = ServiceDaemon::new().expect("Failed to create daemon");
     let service_type = format!("{identifier}.{MDNS_PAIRING_TYPE}");
 
@@ -50,7 +50,7 @@ pub async fn find_pairing_service(identifier: &str) -> anyhow::Result<ServiceInf
     }
 }
 
-pub async fn find_connection_service() -> anyhow::Result<ServiceInfo> {
+pub async fn find_connection_service() -> anyhow::Result<Box<ResolvedService>> {
     let mdns = ServiceDaemon::new().expect("Failed to create daemon");
 
     match timeout(
