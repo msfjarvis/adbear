@@ -9,8 +9,8 @@ pub fn pair(ip: Ipv4Addr, port: u16, password: &str) -> io::Result<Output> {
         .arg("pair")
         .arg(format!("{ip}:{port}"))
         .arg(password)
-        .stdout(Stdio::null())
-        .stderr(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
         .output()
 }
 
@@ -19,7 +19,7 @@ pub fn connect(ip: Ipv4Addr, port: u16) -> io::Result<Output> {
         .arg("connect")
         .arg(format!("{ip}:{port}"))
         .stdout(Stdio::piped())
-        .stderr(Stdio::null())
+        .stderr(Stdio::piped())
         .output()
 }
 
@@ -28,6 +28,7 @@ pub fn get_device_name(ip: Ipv4Addr, port: u16) -> io::Result<Output> {
         .arg("-s")
         .arg(format!("{ip}:{port}"))
         .arg("shell")
-        .arg("getprop ro.product.model")
+        .arg("getprop")
+        .arg("ro.product.model")
         .output()
 }
