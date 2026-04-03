@@ -9,6 +9,7 @@ dependencies = [
  "anyhow",
  "fast_qr",
  "hostname",
+ "if-addrs",
  "mdns-sd",
  "rand",
  "tokio",

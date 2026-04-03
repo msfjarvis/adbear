@@ -25,7 +25,7 @@ async fn main() {
     // --- Pairing phase ---
     match scanning::find_pairing_service(&mdns, &identifier).await {
         Ok(info) => {
-            let Some(ip) = info.get_addresses_v4().into_iter().next() else {
+            let Some(ip) = scanning::pick_best_ipv4(info.get_addresses_v4()) else {
                 eprintln!("Error: paired device has no IPv4 address");
                 let _ = mdns.shutdown();
                 std::process::exit(1);
@@ -65,7 +65,7 @@ async fn main() {
     // --- Connection phase ---
     match scanning::find_connection_service(&mdns, &identifier).await {
         Ok(info) => {
-            let Some(ip) = info.get_addresses_v4().into_iter().next() else {
+            let Some(ip) = scanning::pick_best_ipv4(info.get_addresses_v4()) else {
                 eprintln!("Error: connection service has no IPv4 address");
                 let _ = mdns.shutdown();
                 std::process::exit(1);
