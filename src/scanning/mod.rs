@@ -9,69 +9,60 @@ const MDNS_PAIRING_TYPE: &str = "_adb-tls-pairing._tcp.local.";
 async fn find_mdns_service(
     mdns: &ServiceDaemon,
     service_type: &str,
-    is_match: impl Fn(&Box<ResolvedService>) -> bool,
+    is_match: impl Fn(&ResolvedService) -> bool,
 ) -> Option<Box<ResolvedService>> {
     let receiver = mdns.browse(service_type).expect("Failed to browse");
 
     while let Ok(event) = receiver.recv_async().await {
-        if let ServiceEvent::ServiceResolved(info) = event {
-            if is_match(&info) {
-                return Some(info);
+        match event {
+            ServiceEvent::ServiceResolved(info) => {
+                if is_match(&info) {
+                    return Some(info);
+                }
             }
+            ServiceEvent::SearchStopped(_) => break,
+            _ => {}
         }
     }
     None
 }
 
-pub async fn find_pairing_service(identifier: &str) -> anyhow::Result<Box<ResolvedService>> {
-    let mdns = ServiceDaemon::new().expect("Failed to create daemon");
-    let service_type = format!("{identifier}.{MDNS_PAIRING_TYPE}");
+pub async fn find_pairing_service(
+    mdns: &ServiceDaemon,
+    identifier: &str,
+) -> anyhow::Result<Box<ResolvedService>> {
+    let expected_fullname = format!("{identifier}.{MDNS_PAIRING_TYPE}");
 
     match timeout(
         Duration::from_secs(30),
-        find_mdns_service(&mdns, &service_type, |info| {
-            info.get_fullname() == service_type
+        find_mdns_service(mdns, MDNS_PAIRING_TYPE, |info| {
+            info.get_fullname() == expected_fullname
         }),
     )
     .await
     {
-        Ok(Some(info)) => {
-            mdns.shutdown().unwrap();
-            Ok(info)
-        }
-        Ok(None) => {
-            mdns.shutdown().unwrap();
-            Err(anyhow!("Device not found"))
-        }
-        Err(_) => {
-            mdns.shutdown().unwrap();
-            Err(anyhow!("Timeout"))
-        }
+        Ok(Some(info)) => Ok(info),
+        Ok(None) => Err(anyhow!("Device not found")),
+        Err(_) => Err(anyhow!("Timeout waiting for pairing service")),
     }
 }
 
-pub async fn find_connection_service() -> anyhow::Result<Box<ResolvedService>> {
-    let mdns = ServiceDaemon::new().expect("Failed to create daemon");
+pub async fn find_connection_service(
+    mdns: &ServiceDaemon,
+    identifier: &str,
+) -> anyhow::Result<Box<ResolvedService>> {
+    let expected_prefix = format!("{identifier}.");
 
     match timeout(
         Duration::from_secs(30),
-        find_mdns_service(&mdns, MDNS_SCAN_TYPE, |info| {
-            info.get_fullname().ends_with(MDNS_SCAN_TYPE)
+        find_mdns_service(mdns, MDNS_SCAN_TYPE, |info| {
+            info.get_fullname().starts_with(&expected_prefix)
         }),
     )
     .await
     {
-        Ok(Some(info)) => {
-            mdns.shutdown().unwrap();
-            Ok(info)
-        }
-        Ok(None) => {
-            mdns.shutdown().unwrap();
-            Err(anyhow!("Device not found"))
-        }
-        Err(_) => {
-            mdns.shutdown().unwrap();
-            Err(anyhow!("Timeout"))
-        }
+        Ok(Some(info)) => Ok(info),
+        Ok(None) => Err(anyhow!("Device not found")),
+        Err(_) => Err(anyhow!("Timeout waiting for connection service")),
     }
 }
