@@ -7,9 +7,10 @@ use mdns_sd::ServiceDaemon;
 
 #[tokio::main]
 async fn main() {
-    let hostname = hostname::get()
-        .map(|h| h.to_string_lossy().into_owned())
-        .unwrap_or_else(|_| "localhost".to_string());
+    let hostname = hostname::get().map_or_else(
+        |_| "localhost".to_string(),
+        |h| h.to_string_lossy().into_owned(),
+    );
     let identifier = format!("ADBear@{hostname}");
     let password = password::generate();
 

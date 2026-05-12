@@ -18,10 +18,8 @@ async fn find_mdns_service(
 
     while let Ok(event) = receiver.recv_async().await {
         match event {
-            ServiceEvent::ServiceResolved(info) => {
-                if is_match(&info) {
-                    return Some(info);
-                }
+            ServiceEvent::ServiceResolved(info) if is_match(&info) => {
+                return Some(info);
             }
             ServiceEvent::SearchStopped(_) => break,
             _ => {}
