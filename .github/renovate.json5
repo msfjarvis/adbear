@@ -7,4 +7,11 @@
     "github>msfjarvis/shared-workflows//renovate/automerge"
   ],
   "ignorePaths": [".github/workflows/release.yml", ".github/workflows/web.yml"],
+  "packageRules": [
+    {
+      "matchManagers": ["rust-toolchain"],
+      "matchDepNames": ["rust"],
+      "enabled": false,
+    },
+  ],
 }
