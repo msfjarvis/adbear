@@ -102,6 +102,7 @@
             cargo-dist
             cargo-nextest
             cargo-release
+            nix-fast-build
             rustStable
             stdenv.cc
           ];
