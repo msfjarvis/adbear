@@ -10,7 +10,7 @@ on:
 name: Check Rust code
 jobs:
   check:
-    uses: msfjarvis/shared-workflows/.github/workflows/test-flakes-project.yml@11652e3f45222dff6fe420b991f349ee2c8114b6 # main
+    uses: msfjarvis/shared-workflows/.github/workflows/test-flakes-project.yml@a1c12f76dd52f298b621a83c62096f1f5ddc22c9 # main
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
       cachix-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
