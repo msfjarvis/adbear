@@ -16,7 +16,7 @@ eula = false
 
 [dependencies]
 anyhow = "1.0.89"
-fast_qr = "0.13.0"
+fast_qr = "0.14.0"
 hostname = "0.4"
 if-addrs = "0.15"
 mdns-sd = { version = "0.21.0", default-features = false, features = ["async"] }
