@@ -1,7 +1,7 @@
 {
   description = "package definition and devshell for adbear";
 
-  inputs.nixpkgs.url = "github:msfjarvis/nixpkgs/nixpkgs-unstable";
+  inputs.nixpkgs.url = "https://nixexprs.msfjarvis.dev/nixexprs.tar.zst";
 
   inputs.systems.url = "github:msfjarvis/flake-systems";
 
